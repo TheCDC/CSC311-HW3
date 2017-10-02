@@ -4,7 +4,9 @@ import java.io.Reader;
 public class RDPExample1 {
     private Reader in ;
     private char next;
-    public RDPExample1() { in = new InputStreamReader(System.in);
+    private int level = 0;
+    public RDPExample1() {
+        in = new InputStreamReader(System.in);
     }
     // getNextChar: fetches next char
     public char getNextChar() {
@@ -30,12 +32,30 @@ public class RDPExample1 {
     }
     private void E() {
         enter('E');
-        F();
+        T();
         while (next == '+' || next == '-') {
             nextChar();
-            F();
+            T();
         }
         leave('E');
+    }
+    public void S() {
+        enter('S');
+        F();
+        if (next == '^') {
+            nextChar();
+            S();
+        }
+        leave('S');
+    }
+    public void T() {
+        enter('T');
+        S();
+        while (next == '*' || next == '/') {
+            nextChar();
+            S();
+        }
+        leave('T');
     }
     private void F() {
         enter('F');
@@ -47,8 +67,7 @@ public class RDPExample1 {
             if (next == ')')
                 nextChar();
             else {
-                System.out
-                    .println("Error!");
+                System.out.println("Error!");
                 System.exit(1);
             }
         } else {
@@ -57,12 +76,20 @@ public class RDPExample1 {
         }
         leave('F');
     }
+    public String repeat(String s, int n) {
+        if (n <= 0) {
+            return " ";
+        }
+        return new String(new char[n]).replace("\0", s);
+    }
     private void enter(char name) {
-        System.out.print(name + ": Enter, \t");
+        level++;
+        System.out.print(repeat(" ", level - 1) + " " + name + ": Enter, \t");
         System.out.println("Next == " + next);
     }
     private void leave(char name) {
-        System.out.print(name + ": Leave, \t");
+        level--;
+        System.out.print(repeat(" ", level - 1) + " " + name + ": Leave, \t");
         System.out.println("Next == " + next);
     }
     public static void main(String[] args) {
