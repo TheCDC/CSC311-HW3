@@ -1,10 +1,10 @@
 #!/bin/bash
-for FILE in $(find `pwd` -name in*.txt)
+while read line;
 do
-	if cat $FILE | java RDPExample1 | grep -q 'Successful'; then 
-		echo "Success" $FILE 
+	if echo "$line" | java RDPExample1 | grep -q 'Successful'; then 
+		echo "Success $line"
 	else 
-		echo "FAIL" $FILE
+		echo "FAIL $line" 
 	fi
 
-done
+done <inputs.txt
